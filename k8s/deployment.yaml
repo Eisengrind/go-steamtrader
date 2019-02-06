@@ -1,0 +1,47 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: steamtrader
+  name: steamtrader
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: steamtrader
+  template:
+    metadata:
+      labels:
+        app: steamtrader
+    spec:
+      containers:
+      - name: steamtrader
+        image: eisengrind/steamtrader:latest
+        imagePullPolicy: Always
+        env:
+        - name: steamtraderAPIKEY
+          valueFrom:
+            secretKeyRef:
+              name: steamtrader-secret
+              key: apikey
+        - name: steamtraderLOGIN
+          valueFrom:
+            secretKeyRef:
+              name: steamtrader-secret
+              key: login
+        - name: steamtraderPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: steamtrader-secret
+              key: password
+        - name: steamtraderSHAREDSECRET
+          valueFrom:
+            secretKeyRef:
+              name: steamtrader-secret
+              key: sharedsecret
+        - name: steamtraderPROCESSTIMEOUT
+          value: "15"
+        resources:
+          limits:
+            cpu: "0.1"
+            memory: 0.05Gi
