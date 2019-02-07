@@ -70,6 +70,8 @@ func login() error {
 }
 
 func processActiveOffers() error {
+	r, _ := session.SellItem()
+
 	logger.Info("fetching tradeoffers")
 	tOffers, err := session.GetTradeOffers(
 		steam.TradeFilterRecvOffers|steam.TradeFilterActiveOnly,
