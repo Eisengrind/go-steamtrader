@@ -1,4 +1,4 @@
-FROM golang:1.11 as build
+FROM golang:1.12 as build
 
 COPY ./ /go/src/github.com/eisengrind/go-steamtrader/
 WORKDIR /go/src/github.com/eisengrind/go-steamtrader/
