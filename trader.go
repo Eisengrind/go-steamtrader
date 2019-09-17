@@ -12,22 +12,16 @@ import (
 )
 
 var (
-	steamAPIKey       = ""
-	steamLogin        = ""
-	steamPass         = ""
-	steamSharedSecret = ""
+	steamAPIKey       = flagenv.String("apiKey", "", "The Steam Web-API key needed to fetch specific information.")
+	steamLogin        = flagenv.String("login", "", "The Steam user name of the trader account.")
+	steamPass         = flagenv.String("password", "", "The Steam password of the trader account.")
+	steamSharedSecret = flagenv.String("sharedSecret", "", "The shared secret of a Steam account.")
 	session           *steam.Session
-	processTimeout    = 60
+	processTimeout    = flagenv.Int("processTimeout", 60, "The timeout to continue processing all offers.")
 	logger            *zap.Logger
 )
 
 func main() {
-	flagenv.EnvPrefix = "steamtrader"
-	flagenv.StringVar(&steamAPIKey, "apiKey", "", "The Steam Web-API key needed to fetch specific information.")
-	flagenv.StringVar(&steamLogin, "login", "", "The Steam user name of the trader account.")
-	flagenv.StringVar(&steamPass, "password", "", "The Steam password of the trader account.")
-	flagenv.StringVar(&steamSharedSecret, "sharedSecret", "", "The shared secret of a Steam account.")
-	flagenv.IntVar(&processTimeout, "processTimeout", 60, "The timeout to continue processing all offers.")
 	flagenv.Parse()
 
 	l, err := zap.NewProductionConfig().Build()
@@ -37,7 +31,7 @@ func main() {
 	logger = l
 
 	logger.Info("starting new Steam session")
-	session = steam.NewSessionWithAPIKey(steamAPIKey)
+	session = steam.NewSessionWithAPIKey(*steamAPIKey)
 	if err := login(); err != nil {
 		logger.Fatal(err.Error())
 	}
@@ -47,7 +41,7 @@ func main() {
 		if err := processActiveOffers(); err != nil {
 			logger.Fatal(err.Error())
 		}
-		time.Sleep(time.Duration(processTimeout) * time.Second)
+		time.Sleep(time.Duration(*processTimeout) * time.Second)
 	}
 }
 
@@ -66,12 +60,10 @@ func login() error {
 		return err
 	}
 
-	return session.Login(steamLogin, steamPass, steamSharedSecret, timeDiff)
+	return session.Login(*steamLogin, *steamPass, *steamSharedSecret, timeDiff)
 }
 
 func processActiveOffers() error {
-	r, _ := session.SellItem()
-
 	logger.Info("fetching tradeoffers")
 	tOffers, err := session.GetTradeOffers(
 		steam.TradeFilterRecvOffers|steam.TradeFilterActiveOnly,
