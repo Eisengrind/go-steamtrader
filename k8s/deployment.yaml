@@ -16,32 +16,34 @@ spec:
     spec:
       containers:
       - name: steamtrader
-        image: eisengrind/steamtrader:latest
+        image: eu.gcr.io/eisengrind/steamtrader:latest
         imagePullPolicy: Always
         env:
-        - name: steamtraderAPIKEY
+        - name: APIKEY
           valueFrom:
             secretKeyRef:
               name: steamtrader-secret
               key: apikey
-        - name: steamtraderLOGIN
+        - name: LOGIN
           valueFrom:
             secretKeyRef:
               name: steamtrader-secret
               key: login
-        - name: steamtraderPASSWORD
+        - name: PASSWORD
           valueFrom:
             secretKeyRef:
               name: steamtrader-secret
               key: password
-        - name: steamtraderSHAREDSECRET
+        - name: SHAREDSECRET
           valueFrom:
             secretKeyRef:
               name: steamtrader-secret
               key: sharedsecret
-        - name: steamtraderPROCESSTIMEOUT
-          value: "15"
+        - name: PROCESSTIMEOUT
+          value: "30"
         resources:
           limits:
             cpu: "0.1"
-            memory: 0.05Gi
+            memory: 0.06Gi
+      imagePullSecrets:
+      - name: google-cloud-registry-pull-secret
