@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: steamtrader
-        image: eu.gcr.io/eisengrind/steamtrader:latest
+        image: eisengrind/steamtrader:latest
         imagePullPolicy: Always
         env:
         - name: APIKEY
@@ -45,5 +45,3 @@ spec:
           limits:
             cpu: "0.1"
             memory: 0.06Gi
-      imagePullSecrets:
-      - name: google-cloud-registry-pull-secret
