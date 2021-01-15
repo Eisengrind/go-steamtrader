@@ -7,7 +7,8 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/doctype/steam"
+	steam "github.com/Philipp15b/go-steam"
+	"github.com/pkg/errors"
 	"github.com/playnet-public/flagenv"
 )
 
@@ -60,7 +61,7 @@ func login() error {
 		return err
 	}
 
-	return session.Login(*steamLogin, *steamPass, *steamSharedSecret, timeDiff)
+	return errors.Wrap(session.Login(*steamLogin, *steamPass, *steamSharedSecret, timeDiff), "steam login")
 }
 
 func processActiveOffers() error {
